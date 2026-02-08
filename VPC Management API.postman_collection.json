@@ -1,0 +1,79 @@
+{
+	"info": {
+		"_postman_id": "49c34f21-9f6c-42d8-ae32-992825e6964d",
+		"name": "VPC Management API",
+		"description": "Collection to manage AWS VPCs and Subnets via API Gateway and Lambda",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39940195"
+	},
+	"item": [
+		{
+			"name": "List All VPCs",
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJraWQiOiI4VGE1dGZiTVlSdkMyTTVZekZIZUJwcjRlQ2xZeVwvK2FPdERBdSt4MTNPcz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxNDc4YTRhOC1lMGUxLTcwZmUtZjJiNS1lODk1ZjE4OTg2MmYiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV94ellpQmUyTGQiLCJjb2duaXRvOnVzZXJuYW1lIjoiZGVtby11c2VyIiwib3JpZ2luX2p0aSI6Ijk2ZDY0MmM3LTNjZDItNDFmZC05ZDBhLTBjZDg5NTQ0ZjAwYSIsImF1ZCI6IjU1bXRwbWs1NDRkMzBlMmc4bDAxaGUzMmx2IiwiZXZlbnRfaWQiOiI0MDNlOTQ0NC1mMWE3LTRiNTMtYjcwMC1jOTQ5YWEwYmI0ZDQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTc3MDU0MTAzMSwiZXhwIjoxNzcwNTQ0NjMxLCJpYXQiOjE3NzA1NDEwMzEsImp0aSI6IjRkMmM3M2IwLTg4ODctNDI5Ny1iNTlhLTk2NjBhY2IxOWU3ZCIsImVtYWlsIjoiZGVtb0BleGFtcGxlLmNvbSJ9.dn2S2IM_NhT9Zdmn_dLW3CYyjr5BChrw92bbvfSv5-8d6FVAiGm4fGJZ67iejjTBZUHc98FyJR8bBAsYZbusE3foz0K0KWJZTOIWQ44GXs8KgultzJj30coe1a0SUAl-MQZItVx5c2hO-lImA28r6Xh4M7i-fhFCGkgkNW4ctO8htPUCv11XN9N9tIicV6kGyS23GZzPiV_l9CAtPvFnL4FJ-wzaCUCpWTjq8VIUj_fDiABewSJJ8znNT0DNUCnS5dfxi5cFGAt5e7oAbkveAWInlgIpgK_PMTCuNaG4gjoKc9t4G-RnhGv2-fVPtLlLmO5uujNLtfZa3IJVSheCJw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/v1/vpc",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"v1",
+						"vpc"
+					]
+				},
+				"description": "Fetches all VPC records from the DynamoDB registry."
+			},
+			"response": []
+		},
+		{
+			"name": "Create New VPC",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJraWQiOiI4VGE1dGZiTVlSdkMyTTVZekZIZUJwcjRlQ2xZeVwvK2FPdERBdSt4MTNPcz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxNDc4YTRhOC1lMGUxLTcwZmUtZjJiNS1lODk1ZjE4OTg2MmYiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV94ellpQmUyTGQiLCJjb2duaXRvOnVzZXJuYW1lIjoiZGVtby11c2VyIiwib3JpZ2luX2p0aSI6Ijk2ZDY0MmM3LTNjZDItNDFmZC05ZDBhLTBjZDg5NTQ0ZjAwYSIsImF1ZCI6IjU1bXRwbWs1NDRkMzBlMmc4bDAxaGUzMmx2IiwiZXZlbnRfaWQiOiI0MDNlOTQ0NC1mMWE3LTRiNTMtYjcwMC1jOTQ5YWEwYmI0ZDQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTc3MDU0MTAzMSwiZXhwIjoxNzcwNTQ0NjMxLCJpYXQiOjE3NzA1NDEwMzEsImp0aSI6IjRkMmM3M2IwLTg4ODctNDI5Ny1iNTlhLTk2NjBhY2IxOWU3ZCIsImVtYWlsIjoiZGVtb0BleGFtcGxlLmNvbSJ9.dn2S2IM_NhT9Zdmn_dLW3CYyjr5BChrw92bbvfSv5-8d6FVAiGm4fGJZ67iejjTBZUHc98FyJR8bBAsYZbusE3foz0K0KWJZTOIWQ44GXs8KgultzJj30coe1a0SUAl-MQZItVx5c2hO-lImA28r6Xh4M7i-fhFCGkgkNW4ctO8htPUCv11XN9N9tIicV6kGyS23GZzPiV_l9CAtPvFnL4FJ-wzaCUCpWTjq8VIUj_fDiABewSJJ8znNT0DNUCnS5dfxi5cFGAt5e7oAbkveAWInlgIpgK_PMTCuNaG4gjoKc9t4G-RnhGv2-fVPtLlLmO5uujNLtfZa3IJVSheCJw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"cidr_vpc\": \"10.0.0.0/16\",\n    \"subnets\": [\n        \"10.0.1.0/24\",\n        \"10.0.2.0/24\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/v1/vpc",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"v1",
+						"vpc"
+					]
+				},
+				"description": "Triggers Lambda to create an AWS VPC and subnets, then records them in DynamoDB."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod",
+			"type": "string"
+		}
+	]
+}
