@@ -212,4 +212,5 @@ __marimo__/
 .terraform/
 .terraform.lock.hcl
 crash.log
+lambda.zip
 
