@@ -9,5 +9,4 @@ output "cognito_client_id" {
 output "api_url" {
   description = "The base URL for your VPC API"
   value       = "${module.api.base_url}/v1/vpc" 
-  # Note: ensure your api_gateway module outputs the stage execution URL
 }

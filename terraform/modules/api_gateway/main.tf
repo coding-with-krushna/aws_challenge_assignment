@@ -44,7 +44,6 @@ resource "aws_api_gateway_deployment" "this" {
     create_before_destroy = true
   }
 
-  # Ensure methods are created BEFORE deployment
   depends_on = [aws_api_gateway_method.methods]
 }
 

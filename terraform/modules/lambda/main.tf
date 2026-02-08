@@ -1,4 +1,4 @@
-# data source in terraform/module/lambda/main.tf
+
 data "archive_file" "lambda_zip" {
   type        = "zip"
   source_dir  = "${path.module}/../../../src"
@@ -13,7 +13,6 @@ resource "aws_lambda_function" "this" {
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
-  # This maps the variable to the OS environment variable
   environment {
     variables = {
       TABLE_NAME = var.dynamo_table_name

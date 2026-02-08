@@ -2,8 +2,6 @@ module "api" {
   source          = "./modules/api_gateway"
   api_name        = "vpc-manager-api"
   integration_ids = [for i in aws_api_gateway_integration.lambda_link : i.id]
-  
-  # FIX: Pass the ID from the resource created in the root
   authorizer_id   = aws_api_gateway_authorizer.cognito_auth.id
 }
 
@@ -42,7 +40,7 @@ resource "aws_api_gateway_integration" "lambda_link" {
   rest_api_id             = module.api.api_id
   resource_id             = module.api.resource_id
   http_method             = each.value
-  integration_http_method = "POST" # Lambda is always called via POST
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = module.lambda.lambda_invoke_arn
 }
@@ -67,7 +65,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
 # Permission for Lambda to access DynamoDB
 resource "aws_iam_role_policy" "lambda_dynamodb" {
   name = "lambda-dynamodb-access"
-  role = module.lambda.lambda_role_name # Make sure your lambda module outputs the role name!
+  role = module.lambda.lambda_role_name
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -84,7 +82,6 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
 # Permission for Lambda to create VPCs and Subnets
 resource "aws_iam_role_policy" "lambda_vpc_admin" {
   name = "lambda-vpc-creation-policy"
-  # This must match the output name of the role from your lambda module
   role = module.lambda.lambda_role_name 
 
   policy = jsonencode({
@@ -97,10 +94,33 @@ resource "aws_iam_role_policy" "lambda_vpc_admin" {
           "ec2:CreateSubnet",
           "ec2:DescribeVpcs",
           "ec2:DescribeSubnets",
-          "ec2:CreateTags" # Needed if your code adds names/tags to the VPC
+          "ec2:CreateTags"
         ]
         Resource = "*"
       }
     ]
   })
+}
+
+# Quota and throttling to control costs
+resource "aws_api_gateway_usage_plan" "vpc_api_plan" {
+  name         = "vpc-api-usage-plan"
+  description  = "Limits total requests to control costs"
+
+  api_stages {
+    api_id = module.api.api_id
+    stage  = "prod"
+  }
+
+  # Hard cap on total requests
+  quota_settings {
+    limit  = 1000    # Max 1000 requests
+    period = "MONTH" # Per month
+  }
+
+  # Speed limit
+  throttle_settings {
+    burst_limit = 10
+    rate_limit  = 5
+  }
 }
