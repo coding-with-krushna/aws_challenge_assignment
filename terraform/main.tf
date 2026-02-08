@@ -1,9 +1,10 @@
 module "api" {
-  source   = "./modules/api_gateway"
-  api_name = "vpc-manager-api"
-
-  # This fixes the error by ensuring integrations exist before deployment
+  source          = "./modules/api_gateway"
+  api_name        = "vpc-manager-api"
   integration_ids = [for i in aws_api_gateway_integration.lambda_link : i.id]
+  
+  # FIX: Pass the ID from the resource created in the root
+  authorizer_id   = aws_api_gateway_authorizer.cognito_auth.id
 }
 
 module "lambda" {
@@ -30,6 +31,11 @@ module "vpc_registry" {
   }
 }
 
+module "auth" {
+  source         = "./modules/cognito"
+  user_pool_name = "vpc-api-auth"
+}
+
 # Integration for both GET and POST
 resource "aws_api_gateway_integration" "lambda_link" {
   for_each                = toset(["GET", "POST"])
@@ -39,6 +45,14 @@ resource "aws_api_gateway_integration" "lambda_link" {
   integration_http_method = "POST" # Lambda is always called via POST
   type                    = "AWS_PROXY"
   uri                     = module.lambda.lambda_invoke_arn
+}
+
+# API Gateway Authorizer using the module output
+resource "aws_api_gateway_authorizer" "cognito_auth" {
+  name          = "cognito_auth"
+  type          = "COGNITO_USER_POOLS"
+  rest_api_id   = module.api.api_id
+  provider_arns = [module.auth.user_pool_arn]
 }
 
 # Permission: Allow API Gateway to call Lambda

@@ -22,21 +22,30 @@ resource "aws_api_gateway_method" "methods" {
   rest_api_id   = aws_api_gateway_rest_api.this.id
   resource_id   = aws_api_gateway_resource.vpc.id
   http_method   = each.value
-  authorization = "NONE"
+  
+  # FIX: Change from NONE and link the ID
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = var.authorizer_id
 }
 
 # Deployment
 resource "aws_api_gateway_deployment" "this" {
   rest_api_id = aws_api_gateway_rest_api.this.id
   
-  # Trigger redeploy when methods change
   triggers = {
-    redeployment = sha1(jsonencode(var.integration_ids))
+    # FIX: Include authorizer_id in triggers so changes to auth force a redeploy
+    redeployment = sha1(jsonencode([
+      var.integration_ids,
+      var.authorizer_id
+    ]))
   }
 
   lifecycle {
     create_before_destroy = true
   }
+
+  # Ensure methods are created BEFORE deployment
+  depends_on = [aws_api_gateway_method.methods]
 }
 
 resource "aws_api_gateway_stage" "prod" {

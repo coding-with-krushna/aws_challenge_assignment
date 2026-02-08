@@ -8,3 +8,9 @@ variable "integration_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "authorizer_id" {
+  type        = string
+  description = "The ID of the Cognito Authorizer"
+  default     = "" # Optional if you want some methods unprotected
+}
